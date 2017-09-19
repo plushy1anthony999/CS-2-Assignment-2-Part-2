@@ -91,8 +91,8 @@ bool BankAccount::isInteger(const string & text) const {
 
 const string BankAccount::toString() const { // FIXME
 	stringstream sstream;
-	sstream << left << setw(20) << "Name" << setw(20) << "Account Number" << setw(16) << "Current Balance" << endl;
-	sstream << left << setw(20) << getFullName() << setw(20) << getAccountNumber() << '$' << setw(16) << fixed << setprecision(2) << getBalance();
+	sstream << left << setw(28) << "Name" << setw(20) << "Account Number" << setw(16) << "Current Balance" << endl;
+	sstream << left << setw(28) << getFullName() << setw(20) << getAccountNumber() << '$' << setw(16) << fixed << setprecision(2) << getBalance();
 	return sstream.str();
 }
 

@@ -25,6 +25,7 @@ public:
 	BankAccountList();
 
 	void addAccount(const BankAccount & BA);
+	bool deleteAccount(const std::string & actNum);
 
 	// Getters
 	const std::string getFirstName(const std::string & actNum) const;
@@ -42,6 +43,8 @@ public:
 	// Writes to i the index that the BankAccount was found, or a -1 if no account was found
 	bool findAccount(const std::string & actNum, int & i) const;
 	const std::string toString() const;
+
+
 
 	// Fills in an empty BankAccountList object through keyboard input
 	static void getInstance(BankAccountList & BAL);

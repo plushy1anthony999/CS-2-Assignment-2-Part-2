@@ -8,17 +8,21 @@ BankAccountList::BankAccountList() {
 }
 
 void BankAccountList::addAccount(const BankAccount & BA) {
-	int tmp; // unused
+	if (num_elements < MAX) {
+		int tmp; // unused
 
-	if (!findAccount(BA.getAccountNumber(), tmp)) { // Check that the account doesn't already exist in List[]
-		List[num_elements] = BA; // Adds account to the first unused spot in the array
-		num_elements++;
-		list_state = LIST_STATE_FLAGS::UNSORTED;
+		if (!findAccount(BA.getAccountNumber(), tmp)) { // Check that the account doesn't already exist in List[]
+			List[num_elements] = BA; // Adds account to the first unused spot in the array
+			num_elements++;
+			list_state = LIST_STATE_FLAGS::UNSORTED;
 
-		cout << "Bank Account #" << BA.getAccountNumber() << " Was added to the list" << endl;
+			cout << "Bank Account #" << BA.getAccountNumber() << " Was added to the list" << endl;
+		}
+		else
+			cout << "Bank Account #" << BA.getAccountNumber() << " already exists in the list" << endl;
 	}
 	else
-		cout << "Bank Account #" << BA.getAccountNumber() << " already exists in the list" << endl;
+		cout << "Can't add Account #" << BA.getAccountNumber() << " since the BankAccountList has reached its max capacity of " << MAX << " accounts" << endl;
 }
 
 // Getters
