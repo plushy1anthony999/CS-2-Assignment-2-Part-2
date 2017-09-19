@@ -111,6 +111,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Assignment 2 Part 1\BankAccount.cpp" />
+    <ClCompile Include="..\..\Assignment 2 Part 1\BankAccountList.cpp" />
+    <ClCompile Include="BankAccountListDriver.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Assignment 2 Part 1\BankAccount.h" />
+    <ClInclude Include="..\..\Assignment 2 Part 1\BankAccountList.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
