@@ -124,7 +124,7 @@ void BankAccount::getInstance(BankAccount & BA) { // FIXME
 		cout << "Invalid accountNumber given" << endl;
 		return;
 	}
-	else if (isInteger(accountNumber)) {
+	else if (!isInteger(accountNumber)) {
 		cout << "Invalid accountNumber given" << endl;
 		return;
 	}

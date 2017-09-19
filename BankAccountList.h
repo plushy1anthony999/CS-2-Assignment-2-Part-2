@@ -3,13 +3,14 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+
 #include "BankAccount.h"
 
 // Tells whether the List array	in BankAccountList Class is currently sorted
 namespace LIST_STATE_FLAGS {
-	static const unsigned int UNSORTED = 0;
-	static const unsigned int SORTED_BY_ACCOUNT = 1;
-	static const unsigned int SORTED_BY_LASTNAME = 2;
+	static const unsigned int UNSORTED = 0; // All in ascending order
+	static const unsigned int SORTED_BY_ACCOUNT = 1; // Account Number
+	static const unsigned int SORTED_BY_LASTNAME = 2; 
 	static const unsigned int SORTED_BY_BALANCE = 3;
 };
 
@@ -35,6 +36,9 @@ public:
 	// Prompts user to change the account's Last Name. Sort Order becomes unsorted if previously sorted by Last Name
 	bool updateAccount();
 
+	// relies on LIST_STATE_FLAGS for sorting List[]
+	void sort(int flag);
+
 	bool depositMoney(const std::string & actNum, double money);
 	bool withDrawMoney(const std::string & actNum, double money);
 
@@ -52,9 +56,14 @@ public:
 
 	const std::string toString() const;
 
-
 	// Fills in an empty BankAccountList object through keyboard input
 	static void getInstance(BankAccountList & BAL);
 	// Fills in an empty BankAccountList object through an opened input-file passed in
 	static void getInstance(BankAccountList & BAL, std::ifstream & in);
+
+	// Private Helper Methods
+private:
+	void sortByAccountNumber();
+	void sortByLastName();
+	void sortByBalance();
 };

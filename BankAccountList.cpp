@@ -1,4 +1,5 @@
 #include "BankAccountList.h"
+#include "HelperFunctions.h"
 
 using namespace std;
 
@@ -52,9 +53,116 @@ bool BankAccountList::deleteAccount(const string & actNum) {
 		return false;
 	}
 }
-bool BankAccountList::updateAccount() {
-	cout << "Please provide the Account Number for the account you wish to update:";
+bool BankAccountList::updateAccount() { // FIXME - Test if this handles the list_state correctly
+	string accountNumber;
+
+	if (HelperFunctions::promptForValue(accountNumber, "Please provide the Account Number for the account you wish to update: ")) {
+		int position;
+		
+		if (findAccount(accountNumber, position)) {
+			cout << List[position].toString() << endl;
+			
+			string newLastName;
+			if (HelperFunctions::promptForValue(newLastName, "Please provide a new Last Name for this account: ")) {
+				List[position].setLastName(newLastName);
+				cout << "The Account has been update successfully" << endl;
+
+				if (list_state == LIST_STATE_FLAGS::SORTED_BY_LASTNAME)
+					list_state = LIST_STATE_FLAGS::UNSORTED;
+
+				return true;
+			}
+			else {
+				cout << "The Last Name provided is invalid" << endl;
+				return false;
+			}
+		}
+		else {
+			cout << "The Account #" << accountNumber << " could not be found" << endl;
+			return false;
+		}
+	}
+	else {
+		cout << "The Account #" << accountNumber << " is invalid" << endl;
+		return false;
+	}
+	
 }
+
+void BankAccountList::sort(int flag) {
+	switch (flag) {
+	case LIST_STATE_FLAGS::SORTED_BY_ACCOUNT:
+		sortByAccountNumber();
+		break;
+	case LIST_STATE_FLAGS::SORTED_BY_LASTNAME:
+		sortByLastName();
+		break;
+	case LIST_STATE_FLAGS::SORTED_BY_BALANCE:
+		sortByBalance();
+		break;
+	
+	default:
+		cout << "Invalid sort flag was given";
+		break;
+	}
+}
+void BankAccountList::sortByAccountNumber() {
+	for (size_t i = 0; i < num_elements; i++) {
+
+		// Minus 'i' is done so the loop doesn't look at elements already sorted and moved to the end
+		for (size_t j = 0; j < num_elements - 1 - i; j++) {
+			int leftAccountNumber = atoi(List[j].getAccountNumber().c_str());
+			int rightAccountNumber = atoi(List[j + 1].getAccountNumber().c_str());
+
+			if (leftAccountNumber > rightAccountNumber) {
+				BankAccount rightBankAccount = List[j + 1];
+				List[j + 1] = List[j]; // Move left element close to the end of the array
+				List[j] = rightBankAccount;
+			}
+		}
+	}
+	list_state = LIST_STATE_FLAGS::SORTED_BY_ACCOUNT;
+}
+void BankAccountList::sortByLastName() {
+	for (size_t i = 0; i < num_elements; i++) {
+
+		// Minus 'i' is done so the loop doesn't look at elements already sorted and moved to the end
+		for (size_t j = 0; j < num_elements - 1 - i; j++) {
+			string capitalizedLastName1; // Used for non-case-sensitive sorting
+			string capitalizedLastName2;
+
+			for (const char & letter : List[j].getLastName())
+				capitalizedLastName1 += toupper(letter);
+			for (const char & letter : List[j + 1].getLastName())
+				capitalizedLastName2 += toupper(letter);
+
+			if (capitalizedLastName1 > capitalizedLastName2) {
+				BankAccount rightBankAccount = List[j + 1];
+				List[j + 1] = List[j]; // Move left element close to the end of the array
+				List[j] = rightBankAccount;
+			}
+		}
+	}
+	list_state = LIST_STATE_FLAGS::SORTED_BY_LASTNAME;
+}
+void BankAccountList::sortByBalance() {
+	for (size_t i = 0; i < num_elements; i++) {
+
+		// Minus 'i' is done so the loop doesn't look at elements already sorted and moved to the end
+		for (size_t j = 0; j < num_elements - 1 - i; j++) {
+			double leftBalance = List[j].getBalance();
+			double rightBalance = List[j + 1].getBalance();
+
+			if (leftBalance > rightBalance) {
+				BankAccount rightBankAccount = List[j + 1];
+				List[j + 1] = List[j]; // Move left element close to the end of the array
+				List[j] = rightBankAccount;
+			}
+		}
+	}
+	list_state = LIST_STATE_FLAGS::SORTED_BY_BALANCE;
+}
+
 
 bool BankAccountList::depositMoney(const string & actNum, double money) {
 	int position;	

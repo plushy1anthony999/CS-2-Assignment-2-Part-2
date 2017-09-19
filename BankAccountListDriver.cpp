@@ -10,7 +10,7 @@ void testBankAccountClass();
 void testBankAccountListClass();
 
 const bool UNIT_TESTING = true;
-const bool SYSTEM_TESTING = false;
+const bool SYSTEM_TESTING = true;
 
 int main() {
 	if (UNIT_TESTING) main1();
@@ -241,5 +241,11 @@ void testBankAccountListClass() {
 		assert(bankAccountList1.getFullName(stringArgStub) == ("FirstName" + stringArgStub + " " + "LastName" + stringArgStub));
 
 		assert(bankAccountList1.getBalance(stringArgStub) == ((i + 1) * 2));
+	}
+
+	// Test updateAccount()
+	if (SYSTEM_TESTING) {
+		bankAccountList1.updateAccount();
+		assert(bankAccountList1.getLastName("1000") == "SMITHY");
 	}
 }
