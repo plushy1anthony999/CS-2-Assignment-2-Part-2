@@ -2,7 +2,8 @@
 
 using namespace std;
 
-template <typename T> // FIXME
+template <typename T> // 
+
 bool promptForValue(T & value, string promptMessage, string errorMessage) {
 
 	string strInput;
@@ -40,7 +41,7 @@ BankAccount::BankAccount() {
 }
 
 BankAccount::BankAccount(const std::string & actN, const std::string & fname, const std::string & lname, double bal) :
-	ActNum(actN), FirstName(fname), LastName(lname), balance(bal) 
+	ActNum(actN), FirstName(fname), LastName(lname), balance(bal)
 {
 	if (balance < 0) {
 		cout << "The balance can not be negative. It's been set to 0" << endl;
@@ -51,9 +52,9 @@ BankAccount::BankAccount(const std::string & actN, const std::string & fname, co
 }
 
 void BankAccount::deposit(double money) {
-	if (money == 0) 
+	if (money == 0)
 		cout << "You have tried to deposit $0.00. Your balance is unchanged" << endl;
-	if (money < 0) 
+	if (money < 0)
 		cout << "Please provide a positive amount to deposit." << endl;
 	if (money > 0) {
 		balance += money;
@@ -90,24 +91,24 @@ bool BankAccount::isInteger(const string & text) const {
 
 const string BankAccount::toString() const { // FIXME
 	stringstream sstream;
-	sstream << left << setw(20) << "Name" << setw(20) << "Account Number" << setw(16) << "Current Balance" <<  endl;
+	sstream << left << setw(20) << "Name" << setw(20) << "Account Number" << setw(16) << "Current Balance" << endl;
 	sstream << left << setw(20) << getFullName() << setw(20) << getAccountNumber() << '$' << setw(16) << fixed << setprecision(2) << getBalance();
 	return sstream.str();
 }
 
 // Will write BankAccount info to either an opened-out-file or stdout
 void BankAccount::print(ostream & out) const { // FIXME: Try casting to check if out is an ofstream object
-	//if (&out == &cout) { // if writing to stdout
-	//	out << "Account Number: " << ActNum << endl;
-	//	out << "First Name: " << FirstName << endl;
-	//	out << "Last Name: " << LastName << endl;
-	//	out << "Balance: " << balance << endl;
-	//}
-	//else {
-		out << "Account Number: " << ActNum << endl;
-		out << "First Name: " << FirstName << endl;
-		out << "Last Name: " << LastName << endl;
-		out << "Balance: $" << fixed << setprecision(2) << balance << endl;
+											   //if (&out == &cout) { // if writing to stdout
+											   //	out << "Account Number: " << ActNum << endl;
+											   //	out << "First Name: " << FirstName << endl;
+											   //	out << "Last Name: " << LastName << endl;
+											   //	out << "Balance: " << balance << endl;
+											   //}
+											   //else {
+	out << "Account Number: " << ActNum << endl;
+	out << "First Name: " << FirstName << endl;
+	out << "Last Name: " << LastName << endl;
+	out << "Balance: $" << fixed << setprecision(2) << balance << endl;
 	//}
 }
 
@@ -168,7 +169,7 @@ void BankAccount::getInstance(BankAccount & BA) { // FIXME
 		cout << "Invalid First Name given" << endl;
 		return;
 	}
-	
+
 	string lastName;
 	cout << "Last Name: ";
 	if (!promptForValue(lastName, "", "")) {
