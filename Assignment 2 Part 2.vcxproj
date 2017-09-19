@@ -120,10 +120,12 @@
     <ClCompile Include="BankAccount.cpp" />
     <ClCompile Include="BankAccountList.cpp" />
     <ClCompile Include="BankAccountListDriver.cpp" />
+    <ClCompile Include="HelperFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BankAccount.h" />
     <ClInclude Include="BankAccountList.h" />
+    <ClInclude Include="HelperFunctions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -24,8 +24,19 @@ class BankAccountList {
 public:
 	BankAccountList();
 
+	// searches for a BankAccount from List[] based on actNum and returns whether or not it found the account
+	// Writes to i the index that the BankAccount was found, or a -1 if no account was found
+	bool findAccount(const std::string & actNum, int & i) const;
+
+	// Adds an account based on a unique ID. The list sort order will be unsorted after adding
 	void addAccount(const BankAccount & BA);
+	// Deletes an account while maintaing the list's current sort order
 	bool deleteAccount(const std::string & actNum);
+	// Prompts user to change the account's Last Name. Sort Order becomes unsorted if previously sorted by Last Name
+	bool updateAccount();
+
+	bool depositMoney(const std::string & actNum, double money);
+	bool withDrawMoney(const std::string & actNum, double money);
 
 	// Getters
 	const std::string getFirstName(const std::string & actNum) const;
@@ -39,11 +50,7 @@ public:
 
 	static int getCapacity(); // returns the max capacity that BankAccountList can hold
 
-	// searches for a BankAccount from List[] based on actNum and returns whether or not it found the account
-	// Writes to i the index that the BankAccount was found, or a -1 if no account was found
-	bool findAccount(const std::string & actNum, int & i) const;
 	const std::string toString() const;
-
 
 
 	// Fills in an empty BankAccountList object through keyboard input

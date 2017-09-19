@@ -7,6 +7,18 @@ BankAccountList::BankAccountList() {
 	list_state = LIST_STATE_FLAGS::UNSORTED;
 }
 
+bool BankAccountList::findAccount(const string & actNum, int & i) const {
+	// Only go through the indexes in List[] that have Bank Accounts
+	for (size_t j = 0; j < num_elements; j++) {
+		if (List[j].getAccountNumber() == actNum) {
+			i = j;
+			return true;
+		}
+	}
+	i = -1;
+	return false;
+}
+
 void BankAccountList::addAccount(const BankAccount & BA) {
 	if (num_elements < MAX) {
 		int tmp; // unused
@@ -23,6 +35,76 @@ void BankAccountList::addAccount(const BankAccount & BA) {
 	}
 	else
 		cout << "Can't add Account #" << BA.getAccountNumber() << " since the BankAccountList has reached its max capacity of " << MAX << " accounts" << endl;
+}
+bool BankAccountList::deleteAccount(const string & actNum) {
+	int	position;
+
+	if (findAccount(actNum, position)) {
+		for (size_t i = position; i < num_elements - 1; i++) { // The minus 1 prevents looking past array bounds
+			List[i] = List[i + 1]; // Shift elements to the right of the found account left,
+								   // Causing the account to be overwrittend while maintaing current sorting order
+		}
+		num_elements--;
+		return true;
+	} 
+	else {
+		cout << "The Account #" << actNum << " couldn't be found" << endl;
+		return false;
+	}
+}
+bool BankAccountList::updateAccount() {
+	cout << "Please provide the Account Number for the account you wish to update:";
+}
+
+bool BankAccountList::depositMoney(const string & actNum, double money) {
+	int position;	
+
+	if (findAccount(actNum, position)) {
+		double oldBalance = List[position].getBalance();
+		List[position].deposit(money);
+
+		if (oldBalance != List[position].getBalance()) { // Check if balance was updated
+			if (list_state == LIST_STATE_FLAGS::SORTED_BY_BALANCE) // FIXME - Test if this handle the list_state correctly
+				list_state = LIST_STATE_FLAGS::UNSORTED;
+
+			return true;
+		}
+		else
+			return false;
+	}
+	else {
+		cout << "The Account #" << actNum << " could not be found" << endl;
+		return false;
+	}
+}
+bool BankAccountList::withDrawMoney(const string & actNum, double money) {
+	int position;
+
+	if (findAccount(actNum, position)) {
+		// Validate that the current balance is greater than the amount being withdrawn
+		if (List[position].getBalance() >= money) {
+			double oldBalance = List[position].getBalance();
+			List[position].withdraw(money);
+
+			if (oldBalance != List[position].getBalance()) { // Check if balance was updated
+				if (list_state == LIST_STATE_FLAGS::SORTED_BY_BALANCE) // FIXME - Test if this handle the list_state correctly
+					list_state = LIST_STATE_FLAGS::UNSORTED;
+
+				return true;
+			}
+			else
+				return false;
+		}
+		else {
+			cout << "You have tried to withdraw $" << fixed << setprecision(2) << money << ", which is greater than your current balance of $" << fixed << setprecision(2) << List[position].getBalance() << endl;
+			cout << "Please provide a lower amount to withdraw." << endl;
+			return false;
+		}
+	}
+	else {
+		cout << "The Account #" << actNum << " could not be found" << endl;
+		return false;
+	}
 }
 
 // Getters
@@ -71,17 +153,6 @@ int BankAccountList::getCapacity() {
 	return MAX;
 }
 
-bool BankAccountList::findAccount(const string & actNum, int & i) const {
-	// Only go through the indexes in List[] that have Bank Accounts
-	for (size_t j = 0; j < num_elements; j++) {
-		if (List[j].getAccountNumber() == actNum) {
-			i = j;
-			return true;
-		}
-	}
-	i = -1;
-	return false;
-}
 
 const string BankAccountList::toString() const {
 	stringstream result;

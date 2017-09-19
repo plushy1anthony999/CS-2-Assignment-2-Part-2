@@ -1,34 +1,7 @@
 #include "BankAccount.h"
-
+#include "HelperFunctions.h"
 using namespace std;
-
-template <typename T> // 
-
-bool promptForValue(T & value, string promptMessage, string errorMessage) {
-
-	string strInput;
-
-	if (!promptMessage.empty())
-		cout << promptMessage;
-
-	getline(cin, strInput); // Read user input as string
-	stringstream sstreamInput(strInput); // turns the string into a stream
-
-										 // Checks for complete conversion to the return type T
-	if (
-		sstreamInput >> value &&
-		!(sstreamInput >> strInput) // Make sure that no garbage is left in sstreamInput
-		)
-		return true;
-	else {
-		cin.clear(); // just in case if cin entered a bad state
-
-		if (!errorMessage.empty())
-			cout << errorMessage << endl;
-
-		return false;
-	}
-}
+using namespace HelperFunctions;
 
 
 BankAccount::BankAccount() {
@@ -80,14 +53,7 @@ void BankAccount::withdraw(double money) {
 	}
 }
 
-bool BankAccount::isInteger(const string & text) const {
-	if (text.empty()) return false;
 
-	char * buffer = nullptr;
-	strtol(text.c_str(), &buffer, 10);
-
-	return (*buffer == '\0'); // If buffer holds a null-terminator, then text is an integer						  
-}
 
 const string BankAccount::toString() const { // FIXME
 	stringstream sstream;
@@ -158,7 +124,7 @@ void BankAccount::getInstance(BankAccount & BA) { // FIXME
 		cout << "Invalid accountNumber given" << endl;
 		return;
 	}
-	else if (!BA.isInteger(accountNumber)) {
+	else if (isInteger(accountNumber)) {
 		cout << "Invalid accountNumber given" << endl;
 		return;
 	}

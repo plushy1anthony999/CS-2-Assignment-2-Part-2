@@ -1,6 +1,7 @@
 #include <assert.h>
 #include "BankAccount.h"
 #include "BankAccountList.h"
+#include "HelperFunctions.h"
 
 using namespace std;
 
@@ -155,24 +156,90 @@ void testBankAccountListClass() {
 	assert(bankAccountList1.getBalance("1010") == 100);
 	assert(bankAccountList1.getNumberOfElements() == 2);
 
+	// Test depositMoney()
+	assert(bankAccountList1.depositMoney("1000", 50) == true);
+	assert(bankAccountList1.getBalance("1000") == 60);
+	assert(bankAccountList1.depositMoney("1010", 32) == true);
+	assert(bankAccountList1.getBalance("1010") == 132);
+	assert(bankAccountList1.depositMoney("9099", 20) == false);
+	assert(bankAccountList1.getNumberOfElements() == 2);
+
 	for (int i = 2; i < 30; i++) { // Fill up bankAccountList1 to max capacity
 		string stringArgStub = to_string(i);
 
-		bankAccountList1.addAccount(BankAccount(stringArgStub, "FirstName" + stringArgStub, "LastName" + stringArgStub, i));
+		BankAccount bankAccount(stringArgStub, "FirstName" + stringArgStub, "LastName" + stringArgStub, i);
+
+		bankAccountList1.addAccount(bankAccount);
 		assert(bankAccountList1.getFirstName(stringArgStub) == "FirstName" + stringArgStub);
 		assert(bankAccountList1.getLastName(stringArgStub) == "LastName" + stringArgStub);
 		assert(bankAccountList1.getFullName(stringArgStub) == ("FirstName" + stringArgStub + " " + "LastName" + stringArgStub));
 		assert(bankAccountList1.getBalance(stringArgStub) == i);
 		assert(bankAccountList1.getNumberOfElements() == i + 1);
+
+		assert(bankAccountList1.depositMoney(stringArgStub, i) == true);
+		assert(bankAccountList1.getBalance(stringArgStub) == (i * 2));
 	}
 
 	assert(bankAccountList1.getNumberOfElements() == 30);
+	assert(bankAccountList1.isEmpty() == false);
 	assert(bankAccountList1.isFull() == true);
 
 	bankAccountList1.addAccount(BankAccount("2002", "Placeholder", "Bob", 100));
 	assert(bankAccountList1.getNumberOfElements() == 30);
+	assert(bankAccountList1.isEmpty() == false);
 	assert(bankAccountList1.isFull() == true);
 
+	// Test withDrawMoney()
+	BankAccountList bankAccountList2;
+	bankAccountList2.addAccount(BankAccount("9999", "Billy", "Bob", 1.20));
+	assert(bankAccountList2.withDrawMoney("9999", 0.21) == true);
+	assert(bankAccountList2.getBalance("9999") == 0.99);
+	assert(bankAccountList2.getNumberOfElements() == 1);
+	bankAccountList2.addAccount(BankAccount("9998", "Billy", "Smith", 1.12));
+	assert(bankAccountList2.getNumberOfElements() == 2);
+
+	for (int i = 2; i < 30; i++) { // Fill up bankAccountList2 to max capacity
+		string stringArgStub = to_string(i);
+
+		BankAccount bankAccount(stringArgStub, "FirstName" + stringArgStub, "LastName" + stringArgStub, i);
+
+		bankAccountList2.addAccount(bankAccount);
+		assert(bankAccountList2.getFirstName(stringArgStub) == "FirstName" + stringArgStub);
+		assert(bankAccountList2.getLastName(stringArgStub) == "LastName" + stringArgStub);
+		assert(bankAccountList2.getFullName(stringArgStub) == ("FirstName" + stringArgStub + " " + "LastName" + stringArgStub));
+		assert(bankAccountList2.getBalance(stringArgStub) == i);
+		assert(bankAccountList2.getNumberOfElements() == i + 1);
+
+		assert(bankAccountList2.withDrawMoney(stringArgStub, i) == true);
+		assert(bankAccountList2.getBalance(stringArgStub) == 0);
+	}
+
+	assert(bankAccountList2.getNumberOfElements() == 30);
+	assert(bankAccountList2.isEmpty() == false);
+	assert(bankAccountList2.isFull() == true);
+	assert(bankAccountList2.withDrawMoney("9099", 20) == false);
+	assert(bankAccountList2.getNumberOfElements() == 30);
+	assert(bankAccountList2.isEmpty() == false);
+	assert(bankAccountList2.isFull() == true);
+
 	// Test toString()
+	cout << bankAccountList1.toString() << endl;
+
+	// Test deleteAccount()
+	assert(bankAccountList1.getNumberOfElements() == 30);
+	assert(bankAccountList1.getListState() == LIST_STATE_FLAGS::UNSORTED);
+	assert(bankAccountList1.deleteAccount("3") == true);
+	assert(bankAccountList1.getListState() == LIST_STATE_FLAGS::UNSORTED);
+	assert(bankAccountList1.getNumberOfElements() == 29);
 	cout << bankAccountList1.toString();
+
+	for (size_t i = 3; i < 29; i++) {
+		string stringArgStub = to_string(i + 1);
+
+		assert(bankAccountList1.getFirstName(stringArgStub) == "FirstName" + stringArgStub);
+		assert(bankAccountList1.getLastName(stringArgStub) == "LastName" + stringArgStub);
+		assert(bankAccountList1.getFullName(stringArgStub) == ("FirstName" + stringArgStub + " " + "LastName" + stringArgStub));
+
+		assert(bankAccountList1.getBalance(stringArgStub) == ((i + 1) * 2));
+	}
 }

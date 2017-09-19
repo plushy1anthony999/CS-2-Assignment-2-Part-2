@@ -14,7 +14,6 @@ class BankAccount {
 
 	bool isEmpty = true;
 
-	bool isInteger(const std::string & text) const;
 
 public:
 	BankAccount();
