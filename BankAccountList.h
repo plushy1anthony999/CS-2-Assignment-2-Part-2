@@ -36,6 +36,7 @@ public:
 	// Prompts user to change the account's Last Name. Sort Order becomes unsorted if previously sorted by Last Name
 	bool updateAccount();
 
+
 	// relies on LIST_STATE_FLAGS for sorting List[]
 	void sort(int flag);
 
@@ -54,7 +55,18 @@ public:
 
 	static int getCapacity(); // returns the max capacity that BankAccountList can hold
 
+	// Sets last name of an account based on the account number passed
+	// Sets list_state to unsorted if list was already sorted by last name
+	void setLastName(const std::string & lname, const std::string & actNum);
+
+	// Retrieves a BankAccount object and assigns it to BA
+	bool getAccountAt(BankAccount & BA, unsigned int & index) const;
+	// Replaces the BankAccount at the given index. Does bounds checking
+	void setAccountAt(BankAccount & BA, unsigned int index);
 	const std::string toString() const;
+	void print(std::ostream & out = cout) const;
+
+	void makeEmpty(); // Makes List[] empty by setting the number of elements to 0 and list_state to unsorted
 
 	// Fills in an empty BankAccountList object through keyboard input
 	static void getInstance(BankAccountList & BAL);

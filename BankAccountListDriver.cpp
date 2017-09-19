@@ -10,7 +10,7 @@ void testBankAccountClass();
 void testBankAccountListClass();
 
 const bool UNIT_TESTING = true;
-const bool SYSTEM_TESTING = true;
+const bool SYSTEM_TESTING = false;
 
 int main() {
 	if (UNIT_TESTING) main1();
@@ -248,4 +248,71 @@ void testBankAccountListClass() {
 		bankAccountList1.updateAccount();
 		assert(bankAccountList1.getLastName("1000") == "SMITHY");
 	}
+
+	// Test sort()
+	assert(bankAccountList1.deleteAccount("2") == true);
+	assert(bankAccountList1.deleteAccount("29") == true);
+	assert(bankAccountList1.getNumberOfElements() == 27);
+	bankAccountList1.addAccount(BankAccount("2", "Teddy", "Roosevelt", 1000));
+	assert(bankAccountList1.getNumberOfElements() == 28);
+
+	bankAccountList1.sort(LIST_STATE_FLAGS::SORTED_BY_ACCOUNT);
+	assert(bankAccountList1.getListState() == LIST_STATE_FLAGS::SORTED_BY_ACCOUNT);
+	assert(bankAccountList1.getNumberOfElements() == 28);
+	assert(bankAccountList1.deleteAccount("2") == true);
+	assert(bankAccountList1.getNumberOfElements() == 27);
+	assert(bankAccountList1.getListState() == LIST_STATE_FLAGS::SORTED_BY_ACCOUNT);
+	bankAccountList1.addAccount(BankAccount("22", "Ronald", "Reagan", 1000)); // Should fail
+	assert(bankAccountList1.getLastName("22") == "LastName22");
+	assert(bankAccountList1.getNumberOfElements() == 27);
+	assert(bankAccountList1.getListState() == LIST_STATE_FLAGS::SORTED_BY_ACCOUNT);
+	bankAccountList1.addAccount(BankAccount("221", "Billy", "Cyrus", 10100));
+	assert(bankAccountList1.getListState() == LIST_STATE_FLAGS::UNSORTED);
+
+	bankAccountList1.sort(LIST_STATE_FLAGS::SORTED_BY_BALANCE);
+	assert(bankAccountList1.getListState() == LIST_STATE_FLAGS::SORTED_BY_BALANCE);
+
+	if (SYSTEM_TESTING) {
+		bankAccountList1.updateAccount();
+		assert(bankAccountList1.getLastName("22") == "Smith");
+		assert(bankAccountList1.getListState() == LIST_STATE_FLAGS::SORTED_BY_BALANCE);
+	}
+
+	bankAccountList1.sort(LIST_STATE_FLAGS::SORTED_BY_LASTNAME);
+	if (SYSTEM_TESTING) {
+		bankAccountList1.updateAccount();
+		assert(bankAccountList1.getLastName("11") == "Billy");
+		assert(bankAccountList1.getListState() == LIST_STATE_FLAGS::UNSORTED);
+	}
+
+	// Test makeEmpty()
+	bankAccountList1.makeEmpty();
+	assert(bankAccountList1.getNumberOfElements() == 0);
+	assert(bankAccountList1.getListState() == LIST_STATE_FLAGS::UNSORTED);
+	bankAccountList1.addAccount(BankAccount("22", "Ronald", "Reagan", 1000));
+	assert(bankAccountList1.getNumberOfElements() == 1);
+	assert(bankAccountList1.getLastName("22") == "Reagan");
+	
+	// Test setAccountAt()
+	bankAccountList1.setAccountAt(BankAccount("21", "Billy", "Reagan", 1000), 1); // Shoud fail
+	bankAccountList1.setAccountAt(BankAccount("21", "Billy", "Reagan", 1000), 0);
+	assert(bankAccountList1.getFirstName("21") == "Billy");
+	assert(bankAccountList1.getNumberOfElements() == 1);
+
+	// Test setLastName()
+	bankAccountList1.sort(LIST_STATE_FLAGS::SORTED_BY_LASTNAME);
+	assert(bankAccountList1.getListState() == LIST_STATE_FLAGS::SORTED_BY_LASTNAME);
+
+	bankAccountList1.setLastName("Green", "21");
+	assert(bankAccountList1.getLastName("21") == "Green");
+	assert(bankAccountList1.getNumberOfElements() == 1);
+	assert(bankAccountList1.getListState() == LIST_STATE_FLAGS::UNSORTED);
+
+	// Test getAccountAt()
+	BankAccount bankAccount3;
+	unsigned int index = 2;
+	assert(bankAccountList1.getAccountAt(bankAccount3, index) == false);
+	index = 0;
+	assert(bankAccountList1.getAccountAt(bankAccount3, index) == true);
+	assert(bankAccount3.getFullName() == "Billy Green");
 }

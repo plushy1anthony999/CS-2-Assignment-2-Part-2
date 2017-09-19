@@ -53,7 +53,7 @@ bool BankAccountList::deleteAccount(const string & actNum) {
 		return false;
 	}
 }
-bool BankAccountList::updateAccount() { // FIXME - Test if this handles the list_state correctly
+bool BankAccountList::updateAccount() {
 	string accountNumber;
 
 	if (HelperFunctions::promptForValue(accountNumber, "Please provide the Account Number for the account you wish to update: ")) {
@@ -88,6 +88,7 @@ bool BankAccountList::updateAccount() { // FIXME - Test if this handles the list
 	}
 	
 }
+
 
 void BankAccountList::sort(int flag) {
 	switch (flag) {
@@ -261,6 +262,34 @@ int BankAccountList::getCapacity() {
 	return MAX;
 }
 
+// Sets last name of an account based on the account number passed
+// Sets list_state to unsorted if list was already sorted by last name
+void BankAccountList::setLastName(const string & lname, const string & actNum) {
+	int position;
+	if (findAccount(actNum, position)) {
+		List[position].setLastName(lname);
+
+		if (list_state == LIST_STATE_FLAGS::SORTED_BY_LASTNAME)
+			list_state = LIST_STATE_FLAGS::UNSORTED;
+	}
+}
+
+bool BankAccountList::getAccountAt(BankAccount & BA, unsigned int & index) const {
+	if (num_elements > index) {// Makes sure index isn't out of range
+		BA = List[index];
+		return true;
+	}
+	else {
+		cout << "The index " << index << " is outside the range of the BankAccountList" << endl;
+		return false;
+	}
+}
+void BankAccountList::setAccountAt(BankAccount & BA, unsigned int index) {
+	if (num_elements > index) // Makes sure index isn't out of range
+		List[index] = BA;
+	else 
+		cout << "The index " << index << " is outside the range of the BankAccountList" << endl;
+}
 
 const string BankAccountList::toString() const {
 	stringstream result;
@@ -271,4 +300,16 @@ const string BankAccountList::toString() const {
 	}
 
 	return result.str();
+}
+
+void BankAccountList::makeEmpty() {
+	num_elements = 0;
+	list_state = LIST_STATE_FLAGS::UNSORTED;
+}
+
+void getInstance(BankAccountList & BAL) { // FIXME
+
+}
+void getInstance(BankAccountList & BAL, ifstream & in) { // FIXME
+
 }
