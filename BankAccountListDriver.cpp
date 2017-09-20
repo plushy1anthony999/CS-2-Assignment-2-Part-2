@@ -10,7 +10,7 @@ void testBankAccountClass();
 void testBankAccountListClass();
 
 const bool UNIT_TESTING = true;
-const bool SYSTEM_TESTING = false;
+const bool SYSTEM_TESTING = true;
 
 int main() {
 	if (UNIT_TESTING) main1();
@@ -315,4 +315,19 @@ void testBankAccountListClass() {
 	index = 0;
 	assert(bankAccountList1.getAccountAt(bankAccount3, index) == true);
 	assert(bankAccount3.getFullName() == "Billy Green");
+
+	// Test print() // FIXME
+	bankAccountList1.print();
+
+	// Test getInstance() with keyboard input
+	if (SYSTEM_TESTING) {
+		BankAccountList::getInstance(bankAccountList1);
+		bankAccountList1.sort(LIST_STATE_FLAGS::SORTED_BY_LASTNAME);
+
+		assert(bankAccountList1.getFullName("9898") == "Billy Bob");
+		assert(bankAccountList1.getNumberOfElements() == 3);
+		assert(bankAccountList1.getFullName("1818") == "Jennifer Lopez");
+		assert(bankAccountList1.getListState() == LIST_STATE_FLAGS::SORTED_BY_LASTNAME);
+	}
+
 }

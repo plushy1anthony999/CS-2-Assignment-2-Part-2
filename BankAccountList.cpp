@@ -301,15 +301,47 @@ const string BankAccountList::toString() const {
 
 	return result.str();
 }
+void BankAccountList::print(ostream & out) const { // FIXME: Try casting to check if out is an ofstream object
+												   // FIXME: Make sure outfile is written in Append Mode
+}
 
 void BankAccountList::makeEmpty() {
 	num_elements = 0;
 	list_state = LIST_STATE_FLAGS::UNSORTED;
 }
 
-void getInstance(BankAccountList & BAL) { // FIXME
+void BankAccountList::getInstance(BankAccountList & BAL) {
+	while (true) {
+		cout << "Please fill out the details for a new Bank Account object to be added" << endl;
 
+		string accountNumber;
+		string firstName;
+		string lastName;
+		double balance;
+
+		HelperFunctions::promptForValue(accountNumber, "Account Number: ", "Invalid Account Number was given");
+		HelperFunctions::promptForValue(firstName, "First Name: ", "Invalid First Name was given");
+		HelperFunctions::promptForValue(lastName, "Last Name: ", "Invalid Last Name was given");
+		HelperFunctions::promptForValue(balance, "Initial Balance: ", "Invalid Initial Balance was given");
+
+		BAL.addAccount(BankAccount(accountNumber, firstName, lastName, balance));
+
+		char addAnotherAccount;
+		while(true) {
+			HelperFunctions::promptForValue(addAnotherAccount, "Add another account? ('y' or 'n'): ");
+
+			if (addAnotherAccount != 'y' && addAnotherAccount != 'n') {
+				cout << "Please type either 'y' or 'n'" << endl;
+				continue;
+			}
+
+			if (addAnotherAccount == 'y') // Prompt for Bank Account Info
+				break;
+			if (addAnotherAccount == 'n') // Stop adding Bank Accounts
+				return;
+		}
+	}
 }
-void getInstance(BankAccountList & BAL, ifstream & in) { // FIXME
-
+void BankAccountList::getInstance(BankAccountList & BAL, ifstream & in) { // FIXME
+	
 }

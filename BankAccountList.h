@@ -63,12 +63,13 @@ public:
 	bool getAccountAt(BankAccount & BA, unsigned int & index) const;
 	// Replaces the BankAccount at the given index. Does bounds checking
 	void setAccountAt(BankAccount & BA, unsigned int index);
+	
 	const std::string toString() const;
-	void print(std::ostream & out = cout) const;
+	void print(std::ostream & out = std::cout) const; // Writes BankAccountList info to file or stdout
 
 	void makeEmpty(); // Makes List[] empty by setting the number of elements to 0 and list_state to unsorted
 
-	// Fills in an empty BankAccountList object through keyboard input
+	// Fills in an empty BankAccountList object with multiple BankAccount objects through keyboard input
 	static void getInstance(BankAccountList & BAL);
 	// Fills in an empty BankAccountList object through an opened input-file passed in
 	static void getInstance(BankAccountList & BAL, std::ifstream & in);
