@@ -39,9 +39,8 @@ int main() {
 		cout << "[12] Print list sorted by account number to console" << endl;
 		cout << "[13] Print list sorted by last name to console" << endl;
 		cout << "[14] Print list sorted by balance to console" << endl;
-		cout << "[15] Print statistics to console" << endl;
 
-		cout << "[16] Exit" << endl;
+		cout << "[15] Exit" << endl;
 		cout << "Enter your choice: " << endl;
 
 		if (!promptForValue(menuOption)) {
@@ -88,7 +87,7 @@ int main() {
 		case 5: {
 			if (accountsHaveBeenAdded) {
 				string outfile;
-				promptForValue(outfile, "Please provide the filename for the output file (will be appended to if it already exists");
+				promptForValue(outfile, "Please provide the filename for the output file (will be appended to if it already exists): ");
 				ofstream outputFile(outfile, ios::app);
 								
 				if (outputFile.is_open()) 
@@ -163,63 +162,76 @@ int main() {
 		}
 		case 10: {
 			if (accountsHaveBeenAdded) {
+				string accountNumber;
 
+				if (promptForValue(accountNumber, "Account Number: ") && isInteger(accountNumber)) {
+					BankAccount bankAccount;
+					int indexToBeFilled = 0;
+
+					if (bankAccountList.findAccount(accountNumber, indexToBeFilled)) {
+						unsigned int indexToBeUsed = indexToBeFilled;
+						if (bankAccountList.getAccountAt(bankAccount, indexToBeUsed)) {
+							bankAccount.print();
+						}
+						else
+							cout << "The Account #" << accountNumber << " could not be found" << endl;
+					}
+					else
+						cout << "The Account #" << accountNumber << " could not be found" << endl;
+				}
+				else
+					cout << "The Account #" << accountNumber << " could not be found" << endl;
 			}
-			else {
+			else 
 				cout << "Currently no accounts are available. Please add an accout using options 1 or 2" << endl;
-				continue;
-			}
+			
+			continue;
 		}
 		case 11: {
 			if (accountsHaveBeenAdded) {
-
+				bankAccountList.print();
 			}
-			else {
+			else
 				cout << "Currently no accounts are available. Please add an accout using options 1 or 2" << endl;
-				continue;
-			}
+
+			continue;
 		}
 		case 12: {
 			if (accountsHaveBeenAdded) {
-
+				bankAccountList.sort(LIST_STATE_FLAGS::SORTED_BY_ACCOUNT);
+				bankAccountList.print();
 			}
-			else {
+			else 
 				cout << "Currently no accounts are available. Please add an accout using options 1 or 2" << endl;
-				continue;
-			}
+			
+			continue;
 		}
 		case 13: {
 			if (accountsHaveBeenAdded) {
-
+				bankAccountList.sort(LIST_STATE_FLAGS::SORTED_BY_LASTNAME);
+				bankAccountList.print();
 			}
-			else {
+			else 
 				cout << "Currently no accounts are available. Please add an accout using options 1 or 2" << endl;
-				continue;
-			}
+			
+			continue;
 		}
 		case 14: {
 			if (accountsHaveBeenAdded) {
-
+				bankAccountList.sort(LIST_STATE_FLAGS::SORTED_BY_BALANCE);
+				bankAccountList.print();
 			}
-			else {
+			else 
 				cout << "Currently no accounts are available. Please add an accout using options 1 or 2" << endl;
-				continue;
-			}
+			
+			continue;
 		}
-		case 15: {
-			if (accountsHaveBeenAdded) {
 
-			}
-			else {
-				cout << "Currently no accounts are available. Please add an accout using options 1 or 2" << endl;
-				continue;
-			}
-		}
-		case 16:
+		case 15:
 			return 0; // End Program
 
 		default:
-			cout << "Please enter a number from 1 through 16" << endl;
+			cout << "Please enter a number from 1 through 15" << endl;
 			continue;
 		}
 	}
