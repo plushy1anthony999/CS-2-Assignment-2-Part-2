@@ -1,7 +1,7 @@
-#include <assert.h>
 #include "BankAccount.h"
 #include "BankAccountList.h"
 #include "HelperFunctions.h"
+#include <assert.h>
 
 using namespace std;
 
@@ -10,7 +10,7 @@ void testBankAccountClass();
 void testBankAccountListClass();
 
 const bool UNIT_TESTING = true;
-const bool SYSTEM_TESTING = true;
+const bool SYSTEM_TESTING = false;
 
 int main() {
 	if (UNIT_TESTING) main1();
@@ -329,5 +329,33 @@ void testBankAccountListClass() {
 		assert(bankAccountList1.getFullName("1818") == "Jennifer Lopez");
 		assert(bankAccountList1.getListState() == LIST_STATE_FLAGS::SORTED_BY_LASTNAME);
 	}
+	bankAccountList1.makeEmpty();
+	assert(bankAccountList1.isEmpty() == true);
 
+	// Test getInstance() from an input file
+	BankAccountList::getInstance(bankAccountList1, ifstream());
+	assert(bankAccountList1.getNumberOfElements() == 13);
+	assert(bankAccountList1.getBalance("1415") == 75.7);
+	bankAccountList1.makeEmpty();
+
+	BankAccountList::getInstance(bankAccountList1, ifstream());
+	assert(bankAccountList1.getNumberOfElements() == 30);
+	assert(bankAccountList1.getBalance("130") == 130);
+	assert(bankAccountList1.getBalance("131") == -1); // Testing for nonexistant bank account
+	bankAccountList1.makeEmpty();
+
+	BankAccountList::getInstance(bankAccountList1, ifstream());
+	assert(bankAccountList1.getNumberOfElements() == 11);
+	assert(bankAccountList1.getBalance("112") == -1); // Testing for nonexistant bank account
+	bankAccountList1.makeEmpty();
+
+	BankAccountList::getInstance(bankAccountList1, ifstream());
+	assert(bankAccountList1.getNumberOfElements() == 7);
+	assert(bankAccountList1.getBalance("10s2") == -1); // Testing for nonexistant bank account
+	assert(bankAccountList1.getBalance("107") == -1);
+	assert(bankAccountList1.getBalance("103") == -1);
+	unsigned int index2 = 1;
+	BankAccount bankAccount4;
+	assert(bankAccountList1.getAccountAt(bankAccount4, index2) == true);
+	assert(bankAccount4.getAccountNumber() == "104");
 }

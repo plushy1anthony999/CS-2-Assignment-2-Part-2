@@ -1,10 +1,9 @@
 #pragma once
+#include "BankAccount.h"
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <sstream>
-
-#include "BankAccount.h"
 
 // Tells whether the List array	in BankAccountList Class is currently sorted
 namespace LIST_STATE_FLAGS {
@@ -43,7 +42,7 @@ public:
 	bool depositMoney(const std::string & actNum, double money);
 	bool withDrawMoney(const std::string & actNum, double money);
 
-	// Getters
+	// Getters (StringGetters will return an empty string on failure);
 	const std::string getFirstName(const std::string & actNum) const;
 	const std::string getLastName(const std::string & actNum) const;
 	const std::string getFullName(const std::string & actNum) const;

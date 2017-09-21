@@ -120,7 +120,7 @@ void BankAccount::getInstance(BankAccount & BA) { // FIXME
 
 	string accountNumber;
 	cout << "Account Number: ";
-	if (!promptForValue(accountNumber)) {
+	if (!readInValueByToken(cin, accountNumber)) {
 		cout << "Invalid accountNumber given" << endl;
 		return;
 	}
@@ -131,21 +131,21 @@ void BankAccount::getInstance(BankAccount & BA) { // FIXME
 
 	string firstName;
 	cout << "First Name: ";
-	if (!promptForValue(firstName)) {
+	if (!readInValueByToken(cin, firstName)) {
 		cout << "Invalid First Name given" << endl;
 		return;
 	}
 
 	string lastName;
 	cout << "Last Name: ";
-	if (!promptForValue(lastName)) {
+	if (!readInValueByToken(cin, lastName)) {
 		cout << "Invalid Last Name given" << endl;
 		return;
 	}
 
 	double balance;
 	cout << "Balance: ";
-	if (!promptForValue(balance)) {
+	if (!readInValueByToken(cin, balance)) {
 		cout << "Invalid Initial Balance was given" << endl;
 		return;
 	}

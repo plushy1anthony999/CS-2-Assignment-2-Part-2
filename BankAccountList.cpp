@@ -2,6 +2,7 @@
 #include "HelperFunctions.h"
 
 using namespace std;
+using namespace HelperFunctions;
 
 BankAccountList::BankAccountList() {
 	num_elements = 0;
@@ -56,14 +57,14 @@ bool BankAccountList::deleteAccount(const string & actNum) {
 bool BankAccountList::updateAccount() {
 	string accountNumber;
 
-	if (HelperFunctions::promptForValue(accountNumber, "Please provide the Account Number for the account you wish to update: ")) {
+	if (readInValueByToken(cin, accountNumber, "Please provide the Account Number for the account you wish to update: ")) {
 		int position;
 		
 		if (findAccount(accountNumber, position)) {
 			cout << List[position].toString() << endl;
 			
 			string newLastName;
-			if (HelperFunctions::promptForValue(newLastName, "Please provide a new Last Name for this account: ")) {
+			if (readInValueByToken(cin, newLastName, "Please provide a new Last Name for this account: ")) {
 				List[position].setLastName(newLastName);
 				cout << "The Account has been update successfully" << endl;
 
@@ -223,6 +224,8 @@ const string BankAccountList::getFirstName(const string & actNum) const { // FIX
 	if (findAccount(actNum, position)) {
 		return List[position].getFirstName();
 	}
+	else
+		return "";
 }
 const string BankAccountList::getLastName(const string & actNum) const {
 	int position;
@@ -230,6 +233,8 @@ const string BankAccountList::getLastName(const string & actNum) const {
 	if (findAccount(actNum, position)) {
 		return List[position].getLastName();
 	}
+	else
+		return "";
 }
 const string BankAccountList::getFullName(const string & actNum) const {
 	int position;
@@ -237,13 +242,17 @@ const string BankAccountList::getFullName(const string & actNum) const {
 	if (findAccount(actNum, position)) {
 		return List[position].getFullName();
 	}
+	else
+		return "";
 }
-double BankAccountList::getBalance(const string & actNum) const {
+double BankAccountList::getBalance(const string & actNum) const { // Returns -1 on failure
 	int position;
 
 	if (findAccount(actNum, position)) {
 		return List[position].getBalance();
 	}
+	else
+		return -1;
 }
 int BankAccountList::getNumberOfElements() const {
 	return num_elements;
@@ -319,16 +328,21 @@ void BankAccountList::getInstance(BankAccountList & BAL) {
 		string lastName;
 		double balance;
 
-		HelperFunctions::promptForValue(accountNumber, "Account Number: ", "Invalid Account Number was given");
-		HelperFunctions::promptForValue(firstName, "First Name: ", "Invalid First Name was given");
-		HelperFunctions::promptForValue(lastName, "Last Name: ", "Invalid Last Name was given");
-		HelperFunctions::promptForValue(balance, "Initial Balance: ", "Invalid Initial Balance was given");
+		readInValueByToken(cin, accountNumber, "Account Number: ", "Invalid Account Number was given");
+		readInValueByToken(cin, firstName, "First Name: ", "Invalid First Name was given");
+		readInValueByToken(cin, lastName, "Last Name: ", "Invalid Last Name was given");
+		readInValueByToken(cin, balance, "Initial Balance: ", "Invalid Initial Balance was given");
+
+		if (!isInteger(accountNumber)) {
+			cout << "Invalid Account Number was given" << endl;
+			continue;
+		}
 
 		BAL.addAccount(BankAccount(accountNumber, firstName, lastName, balance));
 
 		char addAnotherAccount;
 		while(true) {
-			HelperFunctions::promptForValue(addAnotherAccount, "Add another account? ('y' or 'n'): ");
+			readInValueByToken(cin, addAnotherAccount, "Add another account? ('y' or 'n'): ");
 
 			if (addAnotherAccount != 'y' && addAnotherAccount != 'n') {
 				cout << "Please type either 'y' or 'n'" << endl;
@@ -343,5 +357,56 @@ void BankAccountList::getInstance(BankAccountList & BAL) {
 	}
 }
 void BankAccountList::getInstance(BankAccountList & BAL, ifstream & in) { // FIXME
-	
+	string filePath;
+	readInValueByToken(cin, filePath, "Please provide a filepath to the input file: ");
+	in.open(filePath);
+	if (in.is_open()) {
+		unsigned int numOfBankAccountsRead = 0;
+		
+		while (!in.eof()) {
+			string accountNumber;
+			string lastName;
+			string firstName;
+			double balance = -1;
+
+			for (size_t i = 0; i < 4; i++) { // Reads in 4 tokens per bank account
+				switch (i) {
+				case 0:
+					readInValueByToken(cin, accountNumber);
+					break;
+				case 1:
+					readInValueByToken(cin, lastName);
+					break;					
+				case 2:
+					readInValueByToken(cin, firstName);
+					break;
+				case 3:
+					readInValueByToken(cin, balance);
+					break;
+				}
+			}
+			
+
+			if (numOfBankAccountsRead != MAX) {
+				if (  // If Bank Account has bad data, skip to next account
+					!isInteger(accountNumber) ||
+					accountNumber.empty()	  ||
+					lastName.empty()		  ||
+					firstName.empty()		  ||
+					(balance == -1)
+				)
+					continue;
+
+				BAL.addAccount(BankAccount(accountNumber, firstName, lastName, balance));
+				numOfBankAccountsRead++;
+			}
+			else 
+				cout << "The input file contains more than the max amount of 30 Bank Accounts" << endl;
+		}
+
+		cout << numOfBankAccountsRead << " Bank Accounts were processed and stored" << endl;
+		in.close();
+	}
+	else
+		cout << "The file couldn't be opened";
 }
