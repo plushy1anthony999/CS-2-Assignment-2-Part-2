@@ -10,7 +10,7 @@ void testBankAccountClass();
 void testBankAccountListClass();
 
 const bool UNIT_TESTING = true;
-const bool SYSTEM_TESTING = false;
+const bool SYSTEM_TESTING = true;
 
 int main() {
 	if (UNIT_TESTING) main1();

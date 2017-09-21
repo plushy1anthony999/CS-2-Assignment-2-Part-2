@@ -57,14 +57,14 @@ bool BankAccountList::deleteAccount(const string & actNum) {
 bool BankAccountList::updateAccount() {
 	string accountNumber;
 
-	if (readInValueByToken(cin, accountNumber, "Please provide the Account Number for the account you wish to update: ")) {
+	if (promptForValue(accountNumber, "Please provide the Account Number for the account you wish to update: ")) {
 		int position;
 		
 		if (findAccount(accountNumber, position)) {
 			cout << List[position].toString() << endl;
 			
 			string newLastName;
-			if (readInValueByToken(cin, newLastName, "Please provide a new Last Name for this account: ")) {
+			if (promptForValue(newLastName, "Please provide a new Last Name for this account: ")) {
 				List[position].setLastName(newLastName);
 				cout << "The Account has been update successfully" << endl;
 
@@ -321,6 +321,7 @@ void BankAccountList::makeEmpty() {
 
 void BankAccountList::getInstance(BankAccountList & BAL) {
 	while (true) {
+		cout << "---------------------------------------------------------------------" << endl;
 		cout << "Please fill out the details for a new Bank Account object to be added" << endl;
 
 		string accountNumber;
@@ -328,10 +329,13 @@ void BankAccountList::getInstance(BankAccountList & BAL) {
 		string lastName;
 		double balance;
 
-		readInValueByToken(cin, accountNumber, "Account Number: ", "Invalid Account Number was given");
-		readInValueByToken(cin, firstName, "First Name: ", "Invalid First Name was given");
-		readInValueByToken(cin, lastName, "Last Name: ", "Invalid Last Name was given");
-		readInValueByToken(cin, balance, "Initial Balance: ", "Invalid Initial Balance was given");
+		// If bad input was given, ask for input again
+		promptForValue(accountNumber, "Account Number: ", "Invalid Account Number was given", true);
+		promptForValue(firstName, "First Name: ", "Invalid First Name was given", true);
+		promptForValue(lastName, "Last Name: ", "Invalid Last Name was given", true);
+		promptForValue(balance, "Initial Balance: ", "Invalid Initial Balance was given", true);
+		
+
 
 		if (!isInteger(accountNumber)) {
 			cout << "Invalid Account Number was given" << endl;
@@ -342,7 +346,7 @@ void BankAccountList::getInstance(BankAccountList & BAL) {
 
 		char addAnotherAccount;
 		while(true) {
-			readInValueByToken(cin, addAnotherAccount, "Add another account? ('y' or 'n'): ");
+			promptForValue(addAnotherAccount, "Add another account? ('y' or 'n'): ");
 
 			if (addAnotherAccount != 'y' && addAnotherAccount != 'n') {
 				cout << "Please type either 'y' or 'n'" << endl;
@@ -358,7 +362,7 @@ void BankAccountList::getInstance(BankAccountList & BAL) {
 }
 void BankAccountList::getInstance(BankAccountList & BAL, ifstream & in) { // FIXME
 	string filePath;
-	readInValueByToken(cin, filePath, "Please provide a filepath to the input file: ");
+	promptForValue(filePath, "Please provide a filepath to the input file: ");
 	in.open(filePath);
 	if (in.is_open()) {
 		unsigned int numOfBankAccountsRead = 0;
@@ -372,16 +376,16 @@ void BankAccountList::getInstance(BankAccountList & BAL, ifstream & in) { // FIX
 			for (size_t i = 0; i < 4; i++) { // Reads in 4 tokens per bank account
 				switch (i) {
 				case 0:
-					readInValueByToken(cin, accountNumber);
+					promptForValue(accountNumber);
 					break;
 				case 1:
-					readInValueByToken(cin, lastName);
-					break;					
+					promptForValue(lastName);
+					break;			
 				case 2:
-					readInValueByToken(cin, firstName);
+					promptForValue(firstName);
 					break;
 				case 3:
-					readInValueByToken(cin, balance);
+					promptForValue(balance);
 					break;
 				}
 			}
