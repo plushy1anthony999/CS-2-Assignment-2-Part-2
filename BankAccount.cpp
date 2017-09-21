@@ -119,36 +119,24 @@ void BankAccount::getInstance(BankAccount & BA) { // FIXME
 	cout << "-----------------" << endl;
 
 	string accountNumber;
-	cout << "Account Number: ";
-	if (!promptForValue(accountNumber)) {
-		cout << "Invalid accountNumber given" << endl;
+	if (!promptForValue(accountNumber, "Account Number: ", "Invalid Account Number given", true)) 
 		return;
-	}
 	else if (!isInteger(accountNumber)) {
 		cout << "Invalid accountNumber given" << endl;
 		return;
 	}
 
 	string firstName;
-	cout << "First Name: ";
-	if (!promptForValue(firstName)) {
-		cout << "Invalid First Name given" << endl;
+	if (!promptForValue(firstName, "First Name: ", "Invalid First Name given", true))
 		return;
-	}
 
 	string lastName;
-	cout << "Last Name: ";
-	if (!promptForValue(lastName)) {
-		cout << "Invalid Last Name given" << endl;
+	if (!promptForValue(lastName, "Last Name: ", "Invalid Last Name given", true))
 		return;
-	}
 
 	double balance;
-	cout << "Balance: ";
-	if (!promptForValue(balance)) {
-		cout << "Invalid Initial Balance was given" << endl;
+	if (!promptForValue(balance, "Initial Balance: ", "Invalid Initial Balance given", true))
 		return;
-	}
 
 	BA = BankAccount(accountNumber, firstName, lastName, balance);
 }

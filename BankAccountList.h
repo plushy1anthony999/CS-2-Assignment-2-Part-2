@@ -32,7 +32,7 @@ public:
 	void addAccount(const BankAccount & BA);
 	// Deletes an account while maintaing the list's current sort order
 	bool deleteAccount(const std::string & actNum);
-	// Prompts user to change the account's Last Name. Sort Order becomes unsorted if previously sorted by Last Name
+	// Prompts user to change the account's Last Name and First Name. Sort Order becomes unsorted if previously sorted by Last Name
 	bool updateAccount();
 
 
@@ -70,7 +70,7 @@ public:
 
 	// Fills in an empty BankAccountList object with multiple BankAccount objects through keyboard input
 	static void getInstance(BankAccountList & BAL);
-	// Fills in an empty BankAccountList object through an opened input-file passed in
+	// Fills in an empty BankAccountList object through an unopened input-file passed in
 	static void getInstance(BankAccountList & BAL, std::ifstream & in);
 
 	// Private Helper Methods

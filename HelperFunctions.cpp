@@ -10,3 +10,13 @@ bool HelperFunctions::isInteger(const string & text) {
 
 	return (*buffer == '\0'); // If buffer holds a null-terminator, then text is an integer
 }
+
+
+// FIXME - Implement this as a variadic function template
+
+//BOOL_FUNCTION_POINTER HelperFunctions::invertBoolFunction(BOOL_FUNCTION_POINTER bool_function_pointer) {
+//	return [bool_function_pointer]() {
+//		//bool originalValue = bool_function_pointer();
+//		return (bool_function_pointer());
+//	};
+//}

@@ -3,26 +3,238 @@
 #include "HelperFunctions.h"
 #include <assert.h>
 
+
 using namespace std;
+using namespace HelperFunctions;
 
 void main1();
+void testHelperFunctions();
 void testBankAccountClass();
 void testBankAccountListClass();
 
 const bool UNIT_TESTING = true;
-const bool SYSTEM_TESTING = true;
+const bool SYSTEM_TESTING = false;
 
 int main() {
 	if (UNIT_TESTING) main1();
 
+	unsigned int menuOption;
+	bool accountsHaveBeenAdded = false;
+	BankAccountList bankAccountList;
 
+	while (true) {
+		cout << "Menu Options" << endl;
+		cout << "---------------------------------------" << endl;
+		cout << "[1] Add new accounts using keyboard" << endl;
+		cout << "[2] Add new accounts using a data file(Limit = 30 accounts)" << endl;
+		cout << "[3] Update an account" << endl;
+		cout << "[4] Close / delete an account" << endl;
+		cout << "[5] Write current account list to an output file in append mode" << endl;
+		cout << "[6] Print current account list to console" << endl;
+		cout << "[7] Withdraw Money from an account" << endl;
+		cout << "[8] Make Deposit to an account" << endl;
+		cout << "[9] Balance enquiry" << endl;
+		cout << "[10] Search account and show details(console only)" << endl;
+		cout << "[11] Print current list description to console only" << endl;
+		cout << "[12] Print list sorted by account number to console" << endl;
+		cout << "[13] Print list sorted by last name to console" << endl;
+		cout << "[14] Print list sorted by balance to console" << endl;
+		cout << "[15] Print statistics to console" << endl;
+
+		cout << "[16] Exit" << endl;
+		cout << "Enter your choice: " << endl;
+
+		if (!promptForValue(menuOption)) {
+			cout << "Please enter a number from 1 through 15" << endl;
+			continue;
+		}
+
+		switch (menuOption) {
+		case 1:
+			BankAccountList::getInstance(bankAccountList);
+			accountsHaveBeenAdded = true;
+			continue;
+		case 2:
+			BankAccountList::getInstance(bankAccountList, ifstream());
+			accountsHaveBeenAdded = true;
+			continue;
+		case 3: {
+			if (accountsHaveBeenAdded) 
+				bankAccountList.updateAccount();							
+			else 
+				cout << "Currently no accounts are available. Please add an accout using options 1 or 2" << endl;
+			
+			continue;
+		}
+		case 4: {
+			if (accountsHaveBeenAdded) {
+				string accountNumber;
+				if (promptForValue(accountNumber, "Account Number: ") && isInteger(accountNumber)) {
+					if (bankAccountList.deleteAccount(accountNumber)) {
+						cout << "Account #" << accountNumber << " has been deleted" << endl;
+						if (bankAccountList.isEmpty())
+							accountsHaveBeenAdded = false;
+					}				
+				}
+				else 
+					cout << "The Account #" << accountNumber << " could not be found" << endl;
+				
+			}
+			else 
+				cout << "Currently no accounts are available. Please add an accout using options 1 or 2" << endl;
+			
+			continue;
+		}
+		case 5: {
+			if (accountsHaveBeenAdded) {
+				string outfile;
+				promptForValue(outfile, "Please provide the filename for the output file (will be appended to if it already exists");
+				ofstream outputFile(outfile, ios::app);
+								
+				if (outputFile.is_open()) 
+					bankAccountList.print(outputFile);
+				else 
+					cout << "The file couldn't be accessed" << endl;
+			}
+			else 
+				cout << "Currently no accounts are available. Please add an accout using options 1 or 2" << endl;
+			
+			continue;
+		}
+		case 6: {
+			if (accountsHaveBeenAdded) {
+				bankAccountList.print();
+			}
+			else 
+				cout << "Currently no accounts are available. Please add an accout using options 1 or 2" << endl;
+			
+			continue;
+		}
+		case 7: {
+			if (accountsHaveBeenAdded) {
+				string accountNumber;
+				double money;
+				
+				if (promptForValue(accountNumber, "Account Number: ") && isInteger(accountNumber)) {
+					promptForValue(money, "Specify amoun to withdraw: ", "Invalid amount was given", true);
+
+					bankAccountList.withDrawMoney(accountNumber, money);
+				}
+				else 
+					cout << "The Account #" << accountNumber << " could not be found" << endl;
+			}
+			else 
+				cout << "Currently no accounts are available. Please add an accout using options 1 or 2" << endl;
+			
+			continue;
+		}
+		case 8: {
+			if (accountsHaveBeenAdded) {
+				string accountNumber;
+				double money;
+
+				if (promptForValue(accountNumber, "Account Number: ") && isInteger(accountNumber)) {
+					promptForValue(money, "Specify amoun to deposit: ", "Invalid amount was given", true);
+
+					bankAccountList.depositMoney(accountNumber, money);
+				}
+				else
+					cout << "The Account #" << accountNumber << " could not be found" << endl;
+			}
+			else
+				cout << "Currently no accounts are available. Please add an accout using options 1 or 2" << endl;
+			
+			continue;
+		}
+		case 9: {
+			if (accountsHaveBeenAdded) {
+				string accountNumber;
+
+				if (promptForValue(accountNumber, "Account Number: ") && isInteger(accountNumber)) {
+					cout << "Account #" << accountNumber << " Balance: $" << fixed << setprecision(2) << bankAccountList.getBalance(accountNumber) << endl;
+				}
+				else
+					cout << "The Account #" << accountNumber << " could not be found" << endl;
+			}
+			else 
+				cout << "Currently no accounts are available. Please add an accout using options 1 or 2" << endl;
+			
+			continue;
+		}
+		case 10: {
+			if (accountsHaveBeenAdded) {
+
+			}
+			else {
+				cout << "Currently no accounts are available. Please add an accout using options 1 or 2" << endl;
+				continue;
+			}
+		}
+		case 11: {
+			if (accountsHaveBeenAdded) {
+
+			}
+			else {
+				cout << "Currently no accounts are available. Please add an accout using options 1 or 2" << endl;
+				continue;
+			}
+		}
+		case 12: {
+			if (accountsHaveBeenAdded) {
+
+			}
+			else {
+				cout << "Currently no accounts are available. Please add an accout using options 1 or 2" << endl;
+				continue;
+			}
+		}
+		case 13: {
+			if (accountsHaveBeenAdded) {
+
+			}
+			else {
+				cout << "Currently no accounts are available. Please add an accout using options 1 or 2" << endl;
+				continue;
+			}
+		}
+		case 14: {
+			if (accountsHaveBeenAdded) {
+
+			}
+			else {
+				cout << "Currently no accounts are available. Please add an accout using options 1 or 2" << endl;
+				continue;
+			}
+		}
+		case 15: {
+			if (accountsHaveBeenAdded) {
+
+			}
+			else {
+				cout << "Currently no accounts are available. Please add an accout using options 1 or 2" << endl;
+				continue;
+			}
+		}
+		case 16:
+			return 0; // End Program
+
+		default:
+			cout << "Please enter a number from 1 through 16" << endl;
+			continue;
+		}
+	}
 }
+
 
 // Unit Testing Function
 void main1() {
+
+
 	cout << "Starting Unit Tests..." << endl;
 	cout << "----------------------------------------------------" << endl;
 
+	testHelperFunctions();
+	cout << endl;
 	testBankAccountClass();
 	cout << endl;
 	testBankAccountListClass();
@@ -30,6 +242,37 @@ void main1() {
 
 	cout << "All tests passed" << endl;
 	cout << "-----------------------------------------------------" << endl;
+}
+
+void testHelperFunctions() {
+	using namespace HelperFunctions;
+
+	// Test isInteger()
+	assert(isInteger("") == false);
+	assert(isInteger("1.0") == false);
+	assert(isInteger("-1") == true);
+	assert(isInteger("1.1") == false);
+	assert(isInteger("1 1") == false);
+	assert(isInteger("10 hello") == false);
+
+	// Test promptForValue() with promptAgainOnError as true
+	if (SYSTEM_TESTING) {
+		string integerAsString;
+		promptForValue(integerAsString, "Please enter an integer: ", "That is not a valid integer", true); // Wil keep prompting if given whitespace as input
+		assert(integerAsString.empty() == false);
+		assert(isInteger(integerAsString) == true);
+	}
+
+
+	// Test promptForValue() with errorCondition Function // FIXME
+	if (SYSTEM_TESTING) {
+		string integerAsString;
+		//promptForValue(integerAsString, "Please enter an integer: ", "That is not a valid integer", false, invertBoolFunction(isInteger))
+		//assert(isInteger(integerAsString) == true); // Has to be true since promptForValue() prompts endlessly until given a vaild int
+
+
+		//promptForValue(something, "Please enter any value that's not an integer: ", )
+	}
 }
 
 void testBankAccountClass() {
@@ -317,7 +560,7 @@ void testBankAccountListClass() {
 	assert(bankAccount3.getFullName() == "Billy Green");
 
 	// Test print() // FIXME
-	bankAccountList1.print();
+
 
 	// Test getInstance() with keyboard input
 	if (SYSTEM_TESTING) {
@@ -333,29 +576,31 @@ void testBankAccountListClass() {
 	assert(bankAccountList1.isEmpty() == true);
 
 	// Test getInstance() from an input file
-	BankAccountList::getInstance(bankAccountList1, ifstream());
-	assert(bankAccountList1.getNumberOfElements() == 13);
-	assert(bankAccountList1.getBalance("1415") == 75.7);
-	bankAccountList1.makeEmpty();
+	if (SYSTEM_TESTING) {
+		BankAccountList::getInstance(bankAccountList1, ifstream());
+		assert(bankAccountList1.getNumberOfElements() == 13);
+		assert(bankAccountList1.getBalance("1415") == 75.7);
+		bankAccountList1.makeEmpty();
 
-	BankAccountList::getInstance(bankAccountList1, ifstream());
-	assert(bankAccountList1.getNumberOfElements() == 30);
-	assert(bankAccountList1.getBalance("130") == 130);
-	assert(bankAccountList1.getBalance("131") == -1); // Testing for nonexistant bank account
-	bankAccountList1.makeEmpty();
+		BankAccountList::getInstance(bankAccountList1, ifstream());
+		assert(bankAccountList1.getNumberOfElements() == 30);
+		assert(bankAccountList1.getBalance("130") == 130);
+		assert(bankAccountList1.getBalance("131") == -1); // Testing for nonexistant bank account
+		bankAccountList1.makeEmpty();
 
-	BankAccountList::getInstance(bankAccountList1, ifstream());
-	assert(bankAccountList1.getNumberOfElements() == 11);
-	assert(bankAccountList1.getBalance("112") == -1); // Testing for nonexistant bank account
-	bankAccountList1.makeEmpty();
+		BankAccountList::getInstance(bankAccountList1, ifstream());
+		assert(bankAccountList1.getNumberOfElements() == 11);
+		assert(bankAccountList1.getBalance("112") == -1); // Testing for nonexistant bank account
+		bankAccountList1.makeEmpty();
 
-	BankAccountList::getInstance(bankAccountList1, ifstream());
-	assert(bankAccountList1.getNumberOfElements() == 7);
-	assert(bankAccountList1.getBalance("10s2") == -1); // Testing for nonexistant bank account
-	assert(bankAccountList1.getBalance("107") == -1);
-	assert(bankAccountList1.getBalance("103") == -1);
-	unsigned int index2 = 1;
-	BankAccount bankAccount4;
-	assert(bankAccountList1.getAccountAt(bankAccount4, index2) == true);
-	assert(bankAccount4.getAccountNumber() == "104");
+		BankAccountList::getInstance(bankAccountList1, ifstream());
+		assert(bankAccountList1.getNumberOfElements() == 7);
+		assert(bankAccountList1.getBalance("10s2") == -1); // Testing for nonexistant bank account
+		assert(bankAccountList1.getBalance("107") == -1);
+		assert(bankAccountList1.getBalance("103") == -1);
+		unsigned int index2 = 1;
+		BankAccount bankAccount4;
+		assert(bankAccountList1.getAccountAt(bankAccount4, index2) == true);
+		assert(bankAccount4.getAccountNumber() == "104");
+	}
 }

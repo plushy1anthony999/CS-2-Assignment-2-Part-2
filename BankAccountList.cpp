@@ -62,21 +62,29 @@ bool BankAccountList::updateAccount() {
 		
 		if (findAccount(accountNumber, position)) {
 			cout << List[position].toString() << endl;
+
+			string newFirstName;
+			if (promptForValue(newFirstName, "Please provide a new First Name for this account: ")) 
+				List[position].setFirstName(newFirstName);
+			
+			else {
+				cout << "The First Name provided is invalid" << endl;
+				return false;
+			}
 			
 			string newLastName;
 			if (promptForValue(newLastName, "Please provide a new Last Name for this account: ")) {
 				List[position].setLastName(newLastName);
-				cout << "The Account has been update successfully" << endl;
 
 				if (list_state == LIST_STATE_FLAGS::SORTED_BY_LASTNAME)
 					list_state = LIST_STATE_FLAGS::UNSORTED;
-
-				return true;
 			}
 			else {
 				cout << "The Last Name provided is invalid" << endl;
 				return false;
 			}
+			
+			return true;
 		}
 		else {
 			cout << "The Account #" << accountNumber << " could not be found" << endl;
@@ -312,6 +320,7 @@ const string BankAccountList::toString() const {
 }
 void BankAccountList::print(ostream & out) const { // FIXME: Try casting to check if out is an ofstream object
 												   // FIXME: Make sure outfile is written in Append Mode
+		out << toString() << endl;
 }
 
 void BankAccountList::makeEmpty() {
@@ -320,7 +329,7 @@ void BankAccountList::makeEmpty() {
 }
 
 void BankAccountList::getInstance(BankAccountList & BAL) {
-	while (true) {
+	while (BAL.getCapacity()) {
 		cout << "---------------------------------------------------------------------" << endl;
 		cout << "Please fill out the details for a new Bank Account object to be added" << endl;
 
@@ -344,12 +353,14 @@ void BankAccountList::getInstance(BankAccountList & BAL) {
 
 		BAL.addAccount(BankAccount(accountNumber, firstName, lastName, balance));
 
-		char addAnotherAccount;
-		while(true) {
+
+		char addAnotherAccount = '\0';
+		while(BAL.getCapacity()) {
 			promptForValue(addAnotherAccount, "Add another account? ('y' or 'n'): ");
 
 			if (addAnotherAccount != 'y' && addAnotherAccount != 'n') {
 				cout << "Please type either 'y' or 'n'" << endl;
+				addAnotherAccount = '\0';
 				continue;
 			}
 
@@ -360,7 +371,7 @@ void BankAccountList::getInstance(BankAccountList & BAL) {
 		}
 	}
 }
-void BankAccountList::getInstance(BankAccountList & BAL, ifstream & in) { // FIXME
+void BankAccountList::getInstance(BankAccountList & BAL, ifstream & in) { // FIXME - Change to handle getInstanceInput3.txt
 	string filePath;
 	promptForValue(filePath, "Please provide a filepath to the input file: ");
 	in.open(filePath);
@@ -375,17 +386,21 @@ void BankAccountList::getInstance(BankAccountList & BAL, ifstream & in) { // FIX
 
 			for (size_t i = 0; i < 4; i++) { // Reads in 4 tokens per bank account
 				switch (i) {
-				case 0:
-					promptForValue(accountNumber);
+				case 0: {
+					readInValueByToken(in, accountNumber);
+					if (!isInteger(accountNumber)) {
+						accountNumber = "";
+					}
 					break;
+				}
 				case 1:
-					promptForValue(lastName);
-					break;			
+					readInValueByToken(in, lastName);
+					break;
 				case 2:
-					promptForValue(firstName);
+					readInValueByToken(in, firstName);
 					break;
 				case 3:
-					promptForValue(balance);
+					readInValueByToken(in, balance);
 					break;
 				}
 			}
@@ -401,8 +416,12 @@ void BankAccountList::getInstance(BankAccountList & BAL, ifstream & in) { // FIX
 				)
 					continue;
 
+				unsigned int oldNumOfElements = BAL.getNumberOfElements();
 				BAL.addAccount(BankAccount(accountNumber, firstName, lastName, balance));
-				numOfBankAccountsRead++;
+				
+				if (oldNumOfElements < BAL.getNumberOfElements()) { // Check if account was actually added
+					numOfBankAccountsRead++;
+				}
 			}
 			else 
 				cout << "The input file contains more than the max amount of 30 Bank Accounts" << endl;
